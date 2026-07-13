@@ -57,9 +57,15 @@ const getExpenses = async (req, res) => {
   try {
     console.log("✅ Get Expenses Controller Hit");
 
-    const result = await pool.query(
-      "SELECT * FROM expenses ORDER BY id DESC"
-    );
+    const user_id = req.user.id;
+
+const result = await pool.query(
+  `SELECT *
+   FROM expenses
+   WHERE user_id = $1
+   ORDER BY id DESC`,
+  [user_id]
+);
 
     res.status(200).json({
       success: true,
@@ -92,26 +98,30 @@ const updateExpense = async (req, res) => {
       notes,
     } = req.body;
 
-    const result = await pool.query(
-      `UPDATE expenses
-       SET title=$1,
-           amount=$2,
-           category=$3,
-           payment_method=$4,
-           expense_date=$5,
-           notes=$6
-       WHERE id=$7
-       RETURNING *`,
-      [
-        title,
-        amount,
-        category,
-        payment_method,
-        expense_date,
-        notes,
-        id,
-      ]
-    );
+    const user_id = req.user.id;
+
+const result = await pool.query(
+  `UPDATE expenses
+   SET title=$1,
+       amount=$2,
+       category=$3,
+       payment_method=$4,
+       expense_date=$5,
+       notes=$6
+   WHERE id=$7
+   AND user_id=$8
+   RETURNING *`,
+  [
+    title,
+    amount,
+    category,
+    payment_method,
+    expense_date,
+    notes,
+    id,
+    user_id,
+  ]
+);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -142,10 +152,12 @@ const deleteExpense = async (req, res) => {
 
     const { id } = req.params;
 
-    const result = await pool.query(
-      "DELETE FROM expenses WHERE id = $1 RETURNING *",
-      [id]
-    );
+    const user_id = req.user.id;
+
+const result = await pool.query(
+  "DELETE FROM expenses WHERE id = $1 AND user_id = $2 RETURNING *",
+  [id, user_id]
+);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -173,11 +185,17 @@ const getSummary = async (req, res) => {
   try {
     console.log("✅ Summary Controller Hit");
 
-    const result = await pool.query(`
-      SELECT
-        COALESCE(SUM(amount), 0) AS total_expense
-      FROM expenses
-    `);
+    const user_id = req.user.id;
+
+const result = await pool.query(
+  `
+  SELECT
+    COALESCE(SUM(amount), 0) AS total_expense
+  FROM expenses
+  WHERE user_id = $1
+  `,
+  [user_id]
+);
 
     const totalExpense = Number(result.rows[0].total_expense);
 
@@ -208,19 +226,91 @@ const getMonthlyExpenses = async (req, res) => {
   try {
     console.log("✅ Monthly Expense Chart Controller Hit");
 
-    const result = await pool.query(`
-      SELECT
-        TO_CHAR(expense_date, 'Mon') AS month,
-        COALESCE(SUM(amount), 0) AS expense
-      FROM expenses
-      GROUP BY TO_CHAR(expense_date, 'Mon'),
-               EXTRACT(MONTH FROM expense_date)
-      ORDER BY EXTRACT(MONTH FROM expense_date);
-    `);
+    const user_id = req.user.id;
+
+const result = await pool.query(
+  `
+  SELECT
+    TO_CHAR(expense_date, 'Mon') AS month,
+    COALESCE(SUM(amount), 0) AS expense
+  FROM expenses
+  WHERE user_id = $1
+  GROUP BY TO_CHAR(expense_date, 'Mon'),
+           EXTRACT(MONTH FROM expense_date)
+  ORDER BY EXTRACT(MONTH FROM expense_date);
+  `,
+  [user_id]
+);
 
     res.status(200).json({
       success: true,
       data: result.rows,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+// AI Insights
+const getAIInsights = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+
+    const result = await pool.query(
+      `
+      SELECT category,
+             SUM(amount) AS total
+      FROM expenses
+      WHERE user_id = $1
+      GROUP BY category
+      ORDER BY total DESC
+      `,
+      [user_id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({
+        success: true,
+        insights: [
+          "No expense data available yet.",
+        ],
+      });
+    }
+
+    const highestCategory = result.rows[0];
+    const totalExpense = result.rows.reduce(
+  (sum, item) => sum + Number(item.total),
+  0
+);
+
+const totalCategories = result.rows.length;
+
+    const suggestion = Math.round(
+      Number(highestCategory.total) * 0.1
+    );
+
+    return res.json({
+      success: true,
+      insights: [
+  `🍔 Highest spending category: ${highestCategory.category}`,
+
+  `💰 Total expense: ₹${totalExpense}`,
+
+  `📂 You spent money in ${totalCategories} categories.`,
+
+  `💸 You spent ₹${highestCategory.total} on ${highestCategory.category}.`,
+
+  `💡 Reduce ${highestCategory.category} spending by 10% to save ₹${suggestion}.`,
+
+  totalExpense > 10000
+    ? "⚠️ Your monthly expenses are high. Consider reducing unnecessary spending."
+    : "✅ Great job! Your expenses are under control.",
+],
     });
 
   } catch (error) {
@@ -239,4 +329,5 @@ module.exports = {
   deleteExpense,
   getSummary,
   getMonthlyExpenses,
+  getAIInsights,
 };

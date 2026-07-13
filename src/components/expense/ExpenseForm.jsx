@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { expenseService } from "../../services/expenseService";
 import { useForm } from "react-hook-form";
 
@@ -23,15 +24,15 @@ const expenseData = {
     const response = await expenseService.addExpense(expenseData);
 
     if (response.success) {
-      alert("Expense Added Successfully 🎉");
+      toast.success("Expense Added Successfully");
       reset();
     } else {
-      alert(response.message);
+      toast.error(response.message);
     }
 
   } catch (error) {
     console.error(error);
-    alert("Server Error");
+   toast.error("Server Error");
   }
 };
   return (

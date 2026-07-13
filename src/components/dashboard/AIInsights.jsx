@@ -1,4 +1,22 @@
+import { useEffect, useState } from "react";
+import { expenseService } from "../../services/expenseService";
 function AIInsights() {
+  const [insights, setInsights] = useState([]);
+  useEffect(() => {
+  const fetchAIInsights = async () => {
+    try {
+      const data = await expenseService.getAIInsights();
+
+      if (data.success) {
+        setInsights(data.insights);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  fetchAIInsights();
+}, []);
   return (
     <div className="bg-white rounded-2xl shadow-lg p-6">
 
@@ -7,21 +25,15 @@ function AIInsights() {
       </h2>
 
       <div className="space-y-4">
-
-        <div className="bg-blue-50 p-4 rounded-xl">
-          You spent 15% less this week.
-        </div>
-
-        <div className="bg-green-50 p-4 rounded-xl">
-          Saving trend is improving.
-        </div>
-
-        <div className="bg-yellow-50 p-4 rounded-xl">
-          Food expenses increased this month.
-        </div>
-
-      </div>
-
+  {insights.map((item, index) => (
+    <div
+      key={index}
+      className="bg-blue-50 p-4 rounded-xl"
+    >
+      {item}
+    </div>
+  ))}
+</div>
     </div>
   );
 }

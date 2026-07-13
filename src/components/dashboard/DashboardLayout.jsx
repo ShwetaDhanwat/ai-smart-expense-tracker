@@ -11,13 +11,13 @@ function DashboardLayout() {
 
       <Sidebar />
 
-      <div className="flex-1 p-8">
+      <div className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
 
         <Topbar />
 
         <SummaryCards />
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-8">
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
 
           <div className="lg:col-span-2">
             <ExpenseChart />

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -40,16 +41,16 @@ const handleSubmit = async (e) => {
       // Save logged-in user
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      alert("Login Successful 🎉");
+      toast.success("Login Successful");
 
       navigate("/dashboard");
     } else {
-      alert(data.message);
+      toast.error(data.message);
     }
 
   } catch (error) {
     console.error(error);
-    alert("Server Error");
+    toast.error("Server Error");
   } finally {
     setLoading(false);
   }
@@ -106,7 +107,7 @@ const handleSubmit = async (e) => {
 <button
   type="submit"
   disabled={loading}
-  className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-xl"
+className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition text-white py-3 rounded-xl"
 >
   {loading ? "Logging in..." : "Login"}
 </button>

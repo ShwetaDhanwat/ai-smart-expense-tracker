@@ -18,6 +18,13 @@ export const expenseService = {
 });
   return await response.json();
 },
+async getAIInsights() {
+  const response = await fetch(`${API_URL}/ai-insights`, {
+    headers: getAuthHeaders(),
+  });
+
+  return await response.json();
+},
 
   async getExpenses() {
    const response = await fetch(API_URL, {

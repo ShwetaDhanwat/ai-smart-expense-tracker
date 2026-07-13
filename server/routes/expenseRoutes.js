@@ -9,12 +9,10 @@ const {
   deleteExpense,
   getSummary,
   getMonthlyExpenses,
+  getAIInsights,
 } = require("../controllers/expenseController");
 
-// Dashboard Summary
-router.get("/summary", getSummary);
-// Monthly Expense Chart
-router.get("/monthly-chart", getMonthlyExpenses);
+
 
 // Get All Expenses
 router.get("/", authMiddleware, getExpenses);
@@ -28,5 +26,6 @@ router.delete("/:id", authMiddleware, deleteExpense);
 router.get("/summary", authMiddleware, getSummary);
 
 router.get("/monthly-chart", authMiddleware, getMonthlyExpenses);
+router.get("/ai-insights", authMiddleware, getAIInsights);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -36,15 +37,15 @@ const handleSubmit = async (e) => {
     const data = await response.json();
 
     if (data.success) {
-      alert("Registration Successful 🎉");
+      toast.success("Registration Successful");
 
       navigate("/login");
     } else {
-      alert(data.message);
+      toast.error(data.message);
     }
 
   } catch (error) {
-    alert("Server Error");
+    toast.error("Server Error");
     console.error(error);
   } finally {
     setLoading(false);
@@ -105,7 +106,7 @@ const handleSubmit = async (e) => {
         <button
   type="submit"
   disabled={loading}
-  className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-xl"
+ className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition text-white py-3 rounded-xl"
 >
   {loading ? "Registering..." : "Register"}
 </button>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import {
   Wallet,
   IndianRupee,
@@ -65,10 +66,19 @@ function SummaryCards() {
         const Icon = card.icon;
 
         return (
-          <div
-            key={index}
-            className={`bg-gradient-to-r ${card.gradient} rounded-3xl text-white p-6 shadow-xl hover:scale-105 transition-all duration-300`}
-          >
+         <motion.div
+  key={index}
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    duration: 0.4,
+    delay: index * 0.15,
+  }}
+  whileHover={{
+    scale: 1.05,
+  }}
+  className={`bg-gradient-to-r ${card.gradient} rounded-3xl text-white p-6 shadow-xl transition-all duration-300`}
+>
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-white/80 text-sm">{card.title}</p>
@@ -88,7 +98,7 @@ function SummaryCards() {
               <TrendingUp size={16} className="mr-2" />
               <span>Live Dashboard Data</span>
             </div>
-          </div>
+          </motion.div>
         );
       })}
     </div>

@@ -4,10 +4,23 @@ import "./index.css";
 import App from "./App";
 import { ExpenseProvider } from "./context/ExpenseContext";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ExpenseProvider>
       <App />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </ExpenseProvider>
   </React.StrictMode>
 );
