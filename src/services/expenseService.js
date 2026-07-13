@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000/api/expenses";
+const API_URL =
+  "https://ai-smart-expense-tracker-t058.onrender.com/api/expenses";
 const getAuthHeaders = () => ({
   "Content-Type": "application/json",
   Authorization: `Bearer ${localStorage.getItem("token")}`,
