@@ -1,5 +1,5 @@
 const API_URL =
-  "https://ai-smart-expense-tracker-t058.onrender.com/api/expenses";
+  "https://ai-smart-expense-tracker-t058.onrender.com/api/auth";
 
 export const authService = {
 
