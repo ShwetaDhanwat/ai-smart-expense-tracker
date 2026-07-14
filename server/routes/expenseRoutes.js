@@ -27,5 +27,9 @@ router.get("/summary", authMiddleware, getSummary);
 
 router.get("/monthly-chart", authMiddleware, getMonthlyExpenses);
 router.get("/ai-insights", authMiddleware, getAIInsights);
+router.get(
+  "/category-summary",
+  authMiddleware, getCategorySummary
+);
 
 module.exports = router;

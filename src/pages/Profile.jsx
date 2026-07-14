@@ -7,15 +7,15 @@ function Profile() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10">
-      <div className="bg-white rounded-3xl shadow-xl p-8">
+    <div className="max-w-5xl mx-auto py-10 px-6">
+      <div className="bg-white rounded-3xl shadow-xl p-10 mb-10">
 
         <div className="flex flex-col items-center">
 
           <img
             src="https://ui-avatars.com/api/?name=Shweta+Dhanwat&background=2563eb&color=fff&size=200"
             alt="Profile"
-            className="w-32 h-32 rounded-full shadow-lg"
+            className="w-36 h-36 rounded-full shadow-2xl border-4 border-white"
           />
 
           <h2 className="text-3xl font-bold mt-5">
@@ -29,7 +29,7 @@ function Profile() {
 
         <div className="mt-10 space-y-5">
 
-          <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-xl">
+          <div className="flex items-center gap-5 bg-slate-50 p-5 rounded-2xl hover:shadow-md transition">
             <User className="text-blue-600" />
             <div>
               <p className="text-gray-500 text-sm">Full Name</p>
@@ -55,10 +55,10 @@ function Profile() {
 
         </div>
 
-        <div className="mt-10 flex justify-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition">
-            Edit Profile
-          </button>
+        <div className="mt-10 mb-4 flex justify-center">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-xl font-semibold shadow-lg transition">
+  Edit Profile
+</button>
         </div>
 
       </div>

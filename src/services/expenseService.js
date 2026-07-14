@@ -62,5 +62,15 @@ async getAIInsights() {
 
     return await response.json();
   },
+  async getCategorySummary() {
+  const response = await fetch(
+    `${API_URL}/category-summary`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return await response.json();
+},
 
 };

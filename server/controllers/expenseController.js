@@ -322,6 +322,25 @@ const totalCategories = result.rows.length;
     });
   }
 };
+const getCategorySummary = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const result = await pool.query(
+      `SELECT category, SUM(amount) AS total
+       FROM expenses
+       WHERE user_id = $1
+       GROUP BY category
+       ORDER BY total DESC`,
+      [userId]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 module.exports = {
   addExpense,
   getExpenses,
@@ -330,4 +349,5 @@ module.exports = {
   getSummary,
   getMonthlyExpenses,
   getAIInsights,
+   getCategorySummary,
 };
